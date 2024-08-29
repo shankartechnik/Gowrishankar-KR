@@ -1,0 +1,241 @@
+{% comment %} Custom hero section  {% endcomment %}
+<section id="section-{{ section.id }}" class="custom-hero gs-tt-custom-hero">
+  {% comment %} hero area is split into two parts, top area and bottom area and bottom area again split into two parts left and right {% endcomment %}
+
+  {% comment %} Hero top area image {% endcomment %}
+  <div class="hero-top-area">&nbsp;</div>
+
+  <div class="hero-bottom-area">
+    {% comment %} Hero specific content {% endcomment %}
+    <div class="hero-bottom-area-left">
+      <h1>{{ section.settings.hero_title_text }}</h1>
+      <div class="hero-content hide-mobile">{{ section.settings.hero_para_content }}</div>
+      <div class="hero-content hide-desktop">{{ section.settings.hero_para_mobile_content }}</div>
+      <a href="{{ section.settings.hero_button_url }}">
+        {{- section.settings.hero_button_text }}
+        <svg width="26" height="12" viewBox="0 0 26 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.22205 4.80469L0.472046 4.80469L0.472046 6.30469L1.22205 6.30469L1.22205 4.80469ZM25.7524 6.08502C26.0453 5.79213 26.0453 5.31725 25.7524 5.02436L20.9794 0.251388C20.6865 -0.0415053 20.2116 -0.0415053 19.9187 0.251388C19.6259 0.544281 19.6259 1.01916 19.9187 1.31205L24.1614 5.55469L19.9187 9.79733C19.6259 10.0902 19.6259 10.5651 19.9187 10.858C20.2116 11.1509 20.6865 11.1509 20.9794 10.858L25.7524 6.08502ZM1.22205 6.30469L25.222 6.30469L25.222 4.80469L1.22205 4.80469L1.22205 6.30469Z" fill="#ffffff"/>
+        </svg>
+      </a>
+    </div>
+    {% comment %} Hero bottom left area image {% endcomment %}
+    <div class="hero-bottom-area-right">&nbsp;</div>
+  </div>
+
+  <div class="hero-announcement">
+    {{ section.settings.hero_bottom_announcement }}
+  </div>
+</section>
+
+<style>
+   /* section hero common css */
+  .shopify-section.shopify-custom-hero-section {
+    position: relative;
+  }
+
+  .hero-top-area {
+    width: 100%;
+    height: 390px;
+    background: url({{'hero-img.png'|asset_img_url:'master'}});
+    background-size: 100%;
+    background-position: bottom;
+    background-repeat: no-repeat;
+  }
+
+  .hero-bottom-area-right {
+    width: 60%;
+    height: auto;
+    background: url({{'hero-img.png'|asset_img_url:'master'}});
+    background-size: cover;
+    background-position: :left;
+    background-repeat: no-repeat;
+  }
+
+  .hide-desktop {
+    display: none !important;
+  }
+   /* section hero common css */
+
+   /* section bottom area css */
+  .hero-bottom-area {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .hero-bottom-area-left {
+    width: 44%;
+    padding: 50px;
+  }
+
+  .hero-bottom-area-left h1 {
+    font-size: 70px;
+    margin: 0 0 50px;
+  }
+
+  .hero-bottom-area-left .hero-content {
+    font-size: 20px;
+    margin-bottom: 50px;
+  }
+
+  .hero-bottom-area-left a {
+    text-align: center;
+    text-decoration: none;
+    color: {{ section.settings.hero_cta_text_color }};
+    background: {{ section.settings.hero_cta_bk_color }};
+    padding: 15px 50px;
+  }
+
+  .hero-bottom-area-left a svg {
+    position: relative;
+    left: 30px;
+  }
+  /* section bottom area css */
+
+  /*hero announcement section*/
+  .hero-announcement {
+    font-family:  "Jost", sans-serif;
+    text-transform: uppercase;
+    font-size: 16px;
+    text-align: center;
+    background-color: #F5F5F5;
+    color: #000000;
+    padding: 3px 0;
+    width: 100%;
+  }
+  /*hero announcement section*/
+
+  @media only screen and (max-width: 860px) {
+     /* section hero common css */
+    .hide-mobile {
+        display: none !important;
+    }
+
+    .hide-desktop {
+        display: block !important;
+    }
+
+    .hero-top-area {
+      display: none;
+    }
+     /* section hero common css */
+
+     /* section bottom area css */
+    .hero-bottom-area {
+      flex-direction: column;
+    }
+
+    .hero-bottom-area-left, .hero-bottom-area-right {
+      width: 100%;
+      text-align: center;
+    }
+
+    .hero-bottom-area-left {
+        padding-bottom: 0;
+    }
+
+    .hero-bottom-area-left .hero-content {
+        margin-bottom: 10px;
+    }
+
+    .hero-bottom-area-right{
+      height: 264px;
+    }
+
+    .hero-bottom-area-left h1 {
+      font-size: 30px;
+      margin-bottom: 24px;
+    }
+
+    .hero-bottom-area-left .hero-content {
+      font-size: 16px;
+    }
+
+    .hero-bottom-area-left a {
+      position: absolute;
+      bottom: 50px;
+      right: 38%;
+    }
+    /* section bottom area css */
+  }
+
+  /* resolution specific left position alignment */
+  @media only screen and (max-width: 690px) {
+      .hero-bottom-area-left a {
+          right: 31.5%;
+      }
+
+      .hero-announcement {
+        font-size: 14px;
+      }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Custom Hero Section",
+  "class": "shopify-custom-hero-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "hero_title_text",
+      "label": "Enter the banner title"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_para_content",
+      "label": "Enter the banner paragraph"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_para_mobile_content",
+      "label": "Enter the banner mobile paragraph"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_text",
+      "label": "Enter button text"
+    },
+    {
+      "type": "url",
+      "id": "hero_button_url",
+      "label": "Enter button URL"
+    },
+    {
+      "type": "color",
+      "id": "hero_cta_text_color",
+      "label": "Hero CTA Button text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "hero_cta_bk_color",
+      "label": "Hero CTA Button Color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "hero_bottom_announcement",
+      "label": "Enter hero announcment to be shown bottom"
+    },
+    {
+      "type": "color",
+      "id": "hero_bottom_announcement_text_color",
+      "label": "Hero bottom announcement text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "hero_bottom_announcement_bk_color",
+      "label": "Hero bottom announcement background Color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Hero",
+      "name": "Custom Hero",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

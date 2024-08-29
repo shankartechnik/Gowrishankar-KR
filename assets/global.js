@@ -1042,7 +1042,7 @@ class SlideshowComponent extends SliderComponent {
     const slideScrollPosition =
       this.slider.scrollLeft +
       this.sliderFirstItemNode.clientWidth *
-        (this.sliderControlLinksArray.indexOf(event.currentTarget) + 1 - this.currentPage);
+      (this.sliderControlLinksArray.indexOf(event.currentTarget) + 1 - this.currentPage);
     this.slider.scrollTo({
       left: slideScrollPosition,
     });
@@ -1266,3 +1266,141 @@ class BulkAdd extends HTMLElement {
 if (!customElements.get('bulk-add')) {
   customElements.define('bulk-add', BulkAdd);
 }
+
+/* custom theme js */
+/*
+* Header ham click event
+*/
+document.getElementById("mb-hamburg").addEventListener("click", (e) => {
+  if (!e.currentTarget.classList.contains("showing-hidden")) {
+    e.currentTarget.classList.add("showing-hidden");
+    [].map.call(document.querySelectorAll(".mobile-hide"), item => {
+      item.classList.remove("mobile-hide");
+      item.classList.add("mobile-show");
+    })
+  } else {
+    e.currentTarget.classList.remove("showing-hidden");
+    [].map.call(document.querySelectorAll(".mobile-show"), item => {
+      item.classList.remove("mobile-show");
+      item.classList.add("mobile-hide");
+    })
+  }
+})
+/*
+* Header ham click event
+*/
+
+/*
+* product variant selection event
+*/
+let productSelected = { size: null, color: null }
+document.querySelector(".color-select-wrapper button").addEventListener("click", (e) => {
+  let selectedColor = e?.currentTarget?.dataset?.colorvalue;
+  productSelected.color = selectedColor ? selectedColor : null;
+});
+
+document.querySelector(".size-wrapper select").addEventListener("change", (e) => {
+  let selectedSize = e?.target?.value;
+  productSelected.size = selectedSize;
+});
+/*
+* product variant selection event
+*/
+
+/*
+* product add to cart event
+*/
+document.querySelector(".product-add-to-cart").addEventListener("click", (e) => {
+  let variantId = null;
+  let variantSelectorValue = productSelected?.size + ' / ' + productSelected?.color;
+  [].map.call(e.target.closest("div").querySelectorAll("select.select-color-size-combination option"), item => {
+    if (item?.text === variantSelectorValue && !item.disabled) {
+      variantId = item.value;
+    }
+  })
+
+  if (variantId) {
+    let fromDataToAdd = {
+      items: [{
+        id: variantId,
+        quantity: 1
+      }]
+    }
+
+    fetch(window.Shopify.routes.root + "cart/add.js", {
+      method: 'POST',
+      headers: {
+        'content-type': "application/json"
+      },
+      body: JSON.stringify(fromDataToAdd)
+    })
+      .then(response => {
+        return response.json()
+      })
+      .then(response => {
+        e.target.closest("div").querySelector("span.success").innerHTML = "";
+        e.target.closest("div").querySelector("span.success").innerHTML = "Product added succesfully.";
+        e.target.closest("div").querySelector("span.success").style.display = "inline-block";
+        setTimeout(() => {
+          e.target.closest("div").querySelector("span.success").style.display = "none";
+        }, 1000);
+        return false;
+      })
+      .catch((error) => {
+        e.target.closest("div").querySelector("span.error").innerHTML = "";
+        e.target.closest("div").querySelector("span.error").innerHTML = "Error while adding to cart";
+        e.target.closest("div").querySelector("span.error").style.display = "inline-block";
+        setTimeout(() => {
+          e.target.closest("div").querySelector("span.error").style.display = "none";
+        }, 1000);
+        return false;
+      })
+  } else {
+    e.target.closest("div").querySelector("span.error").innerHTML = "";
+    e.target.closest("div").querySelector("span.error").innerHTML = "Product out of stock.";
+    e.target.closest("div").querySelector("span.error").style.display = "inline-block";
+    setTimeout(() => {
+      e.target.closest("div").querySelector("span.error").style.display = "none";
+    }, 1000);
+    return false;
+  }
+});
+/*
+* product add to cart event
+*/
+
+
+/*
+* product modal open event
+*/
+const productGridDivs = document.querySelectorAll(".product-grid");
+
+productGridDivs.forEach((productGridDiv) => {
+  productGridDiv.addEventListener("click", (e) => {
+    let targetDiv = e.currentTarget.querySelector("div.product-modal");
+    if (!targetDiv.classList.contains("show")) {
+      targetDiv.classList.add("show");
+    }
+    e.stopPropagation();
+  });
+})
+/*
+* product modal open event
+*/
+
+/*
+* product modal close event
+*/
+const productGridDivsPopupClose = document.querySelectorAll(".product-grid");
+
+productGridDivsPopupClose.forEach((productGridDivsPopupCl) => {
+  productGridDivsPopupCl.addEventListener("click", (e) => {
+    let parentDiv = e.target.closest("div.product-modal");
+    parentDiv.classList.remove("show");
+    e.stopPropagation();
+  });
+});
+/*
+* product modal close event
+*/
+/* custom theme js */
