@@ -78,6 +78,9 @@
     },
     "custom_hero_Nn6zbV": {
       "type": "custom-hero",
+      "custom_css": [
+        ".hero-bottom-area-left h1 {font-weight: bold;}"
+      ],
       "settings": {
         "hero_title_text": "The Gift Guide",
         "hero_para_content": "<p>Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.<\/p>",
