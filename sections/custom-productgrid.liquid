@@ -1,0 +1,356 @@
+{% comment %} custom product grid with product modal popup {% endcomment %}
+<section id="section-{{ section.id }}" class="custom-product-grid gs-tt-product-grid">
+  {% comment %} section title {% endcomment %}
+  <h2 class="product-grid-title">{{ section.settings.product_grid_title_text }}</h2>
+
+  {% comment %} product loop based on blocks in settings {% endcomment %}
+  <div class="product-grid-wrapper">
+    {% for block in section.blocks %}
+      {% comment %} product information {% endcomment %}
+      <div class="product-grid">
+        {% comment %} product image from block settings {% endcomment %}
+        <div class="product-grid-image product-grid-image-{{ forloop.index }}">&nbsp;</div>
+        <style>
+          .product-grid-image-{{ forloop.index }} {
+              background-image: url({{ block.settings.product_grid_image | image_url }});
+          }
+        </style>
+
+        {% comment %} product information to the modal {% endcomment %}
+        <div class="product-modal">
+          <div class="product-modal-wrapper">
+            <button class="close">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.03784 4.94354L13.5231 13.4288" stroke="black" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"/>
+                <path d="M5.03784 13.4285L13.5231 4.94325" stroke="black" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            {% comment %} product default image {% endcomment %}
+            <div class="product-info">
+              <div class="product-info-image product-info-image-{{ forloop.index }}">&nbsp;</div>
+              <style>
+                .product-info-image-{{ forloop.index }} {
+                    background-image: url({{ block.settings.product.featured_image |  image_url  }});
+                }
+              </style>
+
+              {% comment %} product actual details like title, description and price {% endcomment %}
+              <div class="product-info-tpd">
+                <h3>{{ block.settings.product.title }}</h3>
+                <div class="product-info-price">
+                  {{ block.settings.product.selected_or_first_available_variant.price | money_with_currency }}
+                </div>
+                {{ block.settings.product.description }}
+              </div>
+            </div>
+
+            {% comment %} product variant option to select {% endcomment %}
+            <div class="variant-select-area">
+              {% for option in block.settings.product.options_with_values %}
+                <div class="{{ option.name |  downcase }}-wrapper">
+                  <p>{{ option.name }}</p>
+
+                  {% if option.name == 'Color' %}
+                    <div class="{{ option.name |  downcase }}-select-wrapper">
+                      {% for value in option.values %}
+                        <button
+                          class="color-button"
+                          style="background: linear-gradient(90deg, {{ value | downcase }} 8%, #fff 4%, #fff 100%);"
+                          data-colorvalue="{{ value }}"
+                        >
+                          {{ value }}
+                        </button>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+
+                  {% if option.name == 'Size' %}
+                    <div class="select-line-to-arrow">
+                      <select class="{{ option.name |  downcase }}-select-wrapper">
+                        {% for value in option.values %}
+                          <option value="{{value}}">{{ value }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+
+              {% comment %} product variant to process in javascript to get variant id {% endcomment %}
+              <select class="select-color-size-combination hidden">
+                {% for variant in block.settings.product.variants %}
+                  {% assign variant_availability = true %}
+                  {% assign variant_quantity = variant.inventory_quantity %}
+                  {% if variant_quantity < 1 %}
+                    {% assign variant_availability = false %}
+                  {% endif %}
+
+                  {% if variant_availability %}
+                    <option value="{{ variant.id }}">{{ variant.title }}</option>
+                  {% else %}
+                    <option disabled value="{{ variant.id }}">{{ variant.title }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+
+            {% comment %} modal success and error information {% endcomment %}
+            <span class="success"></span>
+            <span class="error"></span>
+
+            {% comment %} Add to cart button {% endcomment %}
+            <button class="product-add-to-cart">
+              Add to cart
+              <svg width="26" height="12" viewBox="0 0 26 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1.22205 4.80469L0.472046 4.80469L0.472046 6.30469L1.22205 6.30469L1.22205 4.80469ZM25.7524 6.08502C26.0453 5.79213 26.0453 5.31725 25.7524 5.02436L20.9794 0.251388C20.6865 -0.0415053 20.2116 -0.0415053 19.9187 0.251388C19.6259 0.544281 19.6259 1.01916 19.9187 1.31205L24.1614 5.55469L19.9187 9.79733C19.6259 10.0902 19.6259 10.5651 19.9187 10.858C20.2116 11.1509 20.6865 11.1509 20.9794 10.858L25.7524 6.08502ZM1.22205 6.30469L25.222 6.30469L25.222 4.80469L1.22205 4.80469L1.22205 6.30469Z" fill="#ffffff"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  /* common css*/
+  .custom-product-grid {
+    width: 100%;
+    margin-top: 90px;
+    padding: 0 50px 50px;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .error {
+    color: red;
+    display: none;
+  }
+
+  .success {
+    color: green;
+    display: none;
+  }
+  /* common css*/
+
+  /* product title css*/
+  .product-grid-title {
+    font-family: 'Lustria', serif;
+    font-size: 36px;
+    line-height: 43.2px;
+    margin-bottom: 30px;
+  }
+  /* product title css*/
+
+  /*product grid css*/
+  .product-grid-wrapper {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .product-grid {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .product-grid-image {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    padding-top: 96%;
+  }
+
+  .product-grid img {
+    width: 100%;
+  }
+  /*product grid css*/
+
+  /*product grid model popup*/
+  .product-modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    visibility: hidden;
+    display: flex;
+    opacity: 0;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+  }
+
+  .product-modal.show {
+    visibility: visible;
+    opacity: 1;
+    z-index: 9999;
+  }
+
+  .product-modal-wrapper {
+    width: 100%;
+    max-width: 311px;
+    background-color: #ffffff;
+    padding: 36px 17px;
+    position: relative;
+  }
+
+  button.close {
+    border: 0;
+    background: none;
+    position: absolute;
+    z-index: 999;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+
+  .product-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .product-info-image {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    padding: 20%;
+  }
+
+  .product-info-tpd h3 {
+    font-size: 16px;
+    margin: 0 auto;
+  }
+  .product-info-tpd p {
+    font-size: 14px;
+    line-height: 1;
+    font-family: 'jost';
+  }
+
+  .variant-select-area {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+  }
+
+  .variant-select-area p {
+    margin: 0 auto;
+    font-size: 14px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .color-select-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .color-button {
+    border: 1px solid #000;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+
+  .size-wrapper {
+    position: relative;
+  }
+
+  .size-select-wrapper {
+    border: 1px solid #000;
+    width: 100%;
+    padding: 10px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='10' viewBox='0 0 16 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2L8 8L14 2' stroke='black' stroke-width='1.5' stroke-linecap='square'/%3E%3C/svg%3E");
+    background-repeat: no-repeat, repeat;
+    background-position: right 1em top 50%, 0 0;
+    background-size: 1em auto, 100%;
+  }
+
+  .select-line-to-arrow:after {
+    border-left: 2px solid #000;
+    content: '\00a0';
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    z-index: 99;
+    display: block;
+    height: 36px;
+  }
+
+  .product-add-to-cart {
+    background: #000;
+    padding: 12px 0;
+    text-align: center;
+    font-family: 'jost';
+    color: #fff;
+    font-size: 16px;
+    text-transform: uppercase;
+    border: 0;
+    width: 100%;
+  }
+  /*product grid model popup*/
+
+  /*responsive queries*/
+  @media only screen and (max-width: 860px) {
+    .product-grid-wrapper {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media only screen and (max-width: 560px) {
+    .product-grid-wrapper {
+      gap: 10px;
+    }
+  }
+  /*responsive queries*/
+</style>
+
+{% schema %}
+{
+  "name": "Custom Product Grid",
+  "class": "shopify-custom-productgrid-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "product_grid_title_text",
+      "label": "Enter the title for product grid area"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "configure product grid",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "product_grid_image",
+          "label": "Select product image for grid"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select related product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Product grid",
+      "name": "Custom Product Grid",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}
