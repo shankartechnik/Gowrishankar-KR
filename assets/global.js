@@ -1294,14 +1294,21 @@ document.getElementById("mb-hamburg").addEventListener("click", (e) => {
 * product variant selection event
 */
 let productSelected = { size: null, color: null }
-document.querySelector(".color-select-wrapper button").addEventListener("click", (e) => {
-  let selectedColor = e?.currentTarget?.dataset?.colorvalue;
-  productSelected.color = selectedColor ? selectedColor : null;
+let allColorButtons = document.querySelectorAll(".color-select-wrapper button");
+let allSizeButtons = document.querySelectorAll(".size-wrapper select");
+
+allColorButtons.forEach((colorButton) => {
+  colorButton.addEventListener("click", (e) => {
+    let selectedColor = e?.currentTarget?.dataset?.colorvalue;
+    productSelected.color = selectedColor ? selectedColor : null;
+  });
 });
 
-document.querySelector(".size-wrapper select").addEventListener("change", (e) => {
-  let selectedSize = e?.target?.value;
-  productSelected.size = selectedSize;
+allSizeButtons.forEach((sizeButton) => {
+  sizeButton.addEventListener("change", (e) => {
+    let selectedSize = e?.target?.value;
+    productSelected.size = selectedSize;
+  });
 });
 /*
 * product variant selection event
@@ -1310,60 +1317,63 @@ document.querySelector(".size-wrapper select").addEventListener("change", (e) =>
 /*
 * product add to cart event
 */
-document.querySelector(".product-add-to-cart").addEventListener("click", (e) => {
-  let variantId = null;
-  let variantSelectorValue = productSelected?.size + ' / ' + productSelected?.color;
-  [].map.call(e.target.closest("div").querySelectorAll("select.select-color-size-combination option"), item => {
-    if (item?.text === variantSelectorValue && !item.disabled) {
-      variantId = item.value;
-    }
-  })
-
-  if (variantId) {
-    let fromDataToAdd = {
-      items: [{
-        id: variantId,
-        quantity: 1
-      }]
-    }
-
-    fetch(window.Shopify.routes.root + "cart/add.js", {
-      method: 'POST',
-      headers: {
-        'content-type': "application/json"
-      },
-      body: JSON.stringify(fromDataToAdd)
+let allProductAddToCartButtons = document.querySelectorAll(".product-add-to-cart");
+allProductAddToCartButtons.forEach((addToCart) => {
+  addToCart.addEventListener("click", (e) => {
+    let variantId = null;
+    let variantSelectorValue = productSelected?.size + ' / ' + productSelected?.color;
+    [].map.call(e.target.closest("div").querySelectorAll("select.select-color-size-combination option"), item => {
+      if (item?.text === variantSelectorValue && !item.disabled) {
+        variantId = item.value;
+      }
     })
-      .then(response => {
-        return response.json()
+
+    if (variantId) {
+      let fromDataToAdd = {
+        items: [{
+          id: variantId,
+          quantity: 1
+        }]
+      }
+
+      fetch(window.Shopify.routes.root + "cart/add.js", {
+        method: 'POST',
+        headers: {
+          'content-type': "application/json"
+        },
+        body: JSON.stringify(fromDataToAdd)
       })
-      .then(response => {
-        e.target.closest("div").querySelector("span.success").innerHTML = "";
-        e.target.closest("div").querySelector("span.success").innerHTML = "Product added succesfully.";
-        e.target.closest("div").querySelector("span.success").style.display = "inline-block";
-        setTimeout(() => {
-          e.target.closest("div").querySelector("span.success").style.display = "none";
-        }, 1000);
-        return false;
-      })
-      .catch((error) => {
-        e.target.closest("div").querySelector("span.error").innerHTML = "";
-        e.target.closest("div").querySelector("span.error").innerHTML = "Error while adding to cart";
-        e.target.closest("div").querySelector("span.error").style.display = "inline-block";
-        setTimeout(() => {
-          e.target.closest("div").querySelector("span.error").style.display = "none";
-        }, 1000);
-        return false;
-      })
-  } else {
-    e.target.closest("div").querySelector("span.error").innerHTML = "";
-    e.target.closest("div").querySelector("span.error").innerHTML = "Product out of stock.";
-    e.target.closest("div").querySelector("span.error").style.display = "inline-block";
-    setTimeout(() => {
-      e.target.closest("div").querySelector("span.error").style.display = "none";
-    }, 1000);
-    return false;
-  }
+        .then(response => {
+          return response.json()
+        })
+        .then(response => {
+          e.target.closest("div").querySelector("span.success").innerHTML = "";
+          e.target.closest("div").querySelector("span.success").innerHTML = "Product added succesfully.";
+          e.target.closest("div").querySelector("span.success").style.display = "inline-block";
+          setTimeout(() => {
+            e.target.closest("div").querySelector("span.success").style.display = "none";
+          }, 1000);
+          return false;
+        })
+        .catch((error) => {
+          e.target.closest("div").querySelector("span.error").innerHTML = "";
+          e.target.closest("div").querySelector("span.error").innerHTML = "Error while adding to cart";
+          e.target.closest("div").querySelector("span.error").style.display = "inline-block";
+          setTimeout(() => {
+            e.target.closest("div").querySelector("span.error").style.display = "none";
+          }, 1000);
+          return false;
+        })
+    } else {
+      e.target.closest("div").querySelector("span.error").innerHTML = "";
+      e.target.closest("div").querySelector("span.error").innerHTML = "Product out of stock.";
+      e.target.closest("div").querySelector("span.error").style.display = "inline-block";
+      setTimeout(() => {
+        e.target.closest("div").querySelector("span.error").style.display = "none";
+      }, 1000);
+      return false;
+    }
+  });
 });
 /*
 * product add to cart event
@@ -1391,11 +1401,10 @@ productGridDivs.forEach((productGridDiv) => {
 /*
 * product modal close event
 */
-const productGridDivsPopupClose = document.querySelectorAll(".product-grid");
-
+const productGridDivsPopupClose = document.querySelectorAll(".product-grid .close");
 productGridDivsPopupClose.forEach((productGridDivsPopupCl) => {
   productGridDivsPopupCl.addEventListener("click", (e) => {
-    let parentDiv = e.target.closest("div.product-modal");
+    let parentDiv = e?.currentTarget?.closest("div.product-modal");
     parentDiv.classList.remove("show");
     e.stopPropagation();
   });
