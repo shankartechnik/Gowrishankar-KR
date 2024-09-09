@@ -35,6 +35,7 @@
         "heading",
         "button"
       ],
+      "disabled": true,
       "settings": {
         "image_overlay_opacity": 40,
         "image_height": "large",
@@ -50,6 +51,7 @@
     },
     "featured_collection": {
       "type": "featured-collection",
+      "disabled": true,
       "settings": {
         "title": "Featured products",
         "heading_size": "h2",
@@ -93,11 +95,70 @@
         "hero_bottom_announcement_text_color": "#ffffff",
         "hero_bottom_announcement_bk_color": "#000000"
       }
+    },
+    "custom_productgrid_fCQ6cF": {
+      "type": "custom-productgrid",
+      "blocks": {
+        "row_rC3NzC": {
+          "type": "row",
+          "settings": {
+            "product_grid_image": "shopify:\/\/shop_images\/black-bag-over-the-shoulder_925x_4cae5708-5e9e-4e7e-96ec-9649f0c20cd8.jpg",
+            "product": "black-leather-bag"
+          }
+        },
+        "row_annaXJ": {
+          "type": "row",
+          "settings": {
+            "product_grid_image": "shopify:\/\/shop_images\/man-adjusts-blue-tuxedo-bowtie_925x_55a49e12-d54b-488e-b7a0-ea4c201eb01f.jpg",
+            "product": "blue-silk-tuxedo"
+          }
+        },
+        "row_9ypaeC": {
+          "type": "row",
+          "settings": {
+            "product_grid_image": "shopify:\/\/shop_images\/red-plaid-shirt_925x_70e9e5a8-8fc5-4d60-9a9a-cc2e0dd57cc9.jpg",
+            "product": "chequered-red-shirt"
+          }
+        },
+        "row_LWJV8F": {
+          "type": "row",
+          "settings": {
+            "product_grid_image": "shopify:\/\/shop_images\/leather-jacket-and-tea_925x_2490cde1-7e61-4151-9a65-de8a763bc701.jpg",
+            "product": "classic-leather-jacket"
+          }
+        },
+        "row_4UnaXW": {
+          "type": "row",
+          "settings": {
+            "product_grid_image": "shopify:\/\/shop_images\/casual-fashion-woman_925x_56b56608-f207-45c1-b677-bb5aa26c1c7a.jpg",
+            "product": "classic-varsity-top"
+          }
+        },
+        "row_DyMCAb": {
+          "type": "row",
+          "settings": {
+            "product_grid_image": "shopify:\/\/shop_images\/young-female-models-denim_925x_44c2cf9e-4030-4347-9d4a-f0e4a1479b4a.jpg",
+            "product": "dark-denim-top"
+          }
+        }
+      },
+      "block_order": [
+        "row_rC3NzC",
+        "row_annaXJ",
+        "row_9ypaeC",
+        "row_LWJV8F",
+        "row_4UnaXW",
+        "row_DyMCAb"
+      ],
+      "settings": {
+        "product_grid_title_text": "Tisso vison in the wild"
+      }
     }
   },
   "order": [
     "image_banner",
     "featured_collection",
-    "custom_hero_Nn6zbV"
+    "custom_hero_Nn6zbV",
+    "custom_productgrid_fCQ6cF"
   ]
 }
