@@ -1,2 +1,2 @@
 # Gowrishankar-KR
-Shopify test from Ecom Experts
+Shopify code repo
